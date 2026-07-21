@@ -14,8 +14,4 @@ public class StateChaseSO : StateSO
     public override void ExitState(StateManager manager)
     {
     }
-    public override bool IsComplete(StateManager manager)
-    {
-        return true;
-    }
 }
