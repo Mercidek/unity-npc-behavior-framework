@@ -4,6 +4,7 @@ using System.Collections.Generic;
 public class StateManager : MonoBehaviour
 {
     [SerializeField] private StateSO initialState;
+    [SerializeField] private GameObject targetObject;
     private StateSO currentState;
     private float timeInCurrentState = 0f;
 
@@ -23,7 +24,7 @@ public class StateManager : MonoBehaviour
         {
             if(transition.currentState == currentState)
             {
-                if(transition.decisionCard != null && transition.decisionCard.Decide(transform, timeInCurrentState))
+                if(transition.decisionCard != null && transition.decisionCard.Decide(transform, targetObject, timeInCurrentState))
                 {
                     SwitchState(transition.targetState);
                     break;
