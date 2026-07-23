@@ -15,8 +15,7 @@ public class StateManager : MonoBehaviour
     private void Start()
     {
         aiContext = new AIContext(transform);
-        currentState = initialState;
-        currentState.EnterState(this);
+        SwitchState(initialState);
     }
 
     private void Update()
@@ -42,6 +41,7 @@ public class StateManager : MonoBehaviour
         if(currentState != null) currentState.ExitState(this);
         currentState = state;
         timeInCurrentState = 0f;
+        aiContext.nextRollTime = -1f;
         currentState.EnterState(this);
     }
 
