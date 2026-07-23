@@ -8,10 +8,13 @@ public class StateManager : MonoBehaviour
     private StateSO currentState;
     private float timeInCurrentState = 0f;
 
+    private AIContext aiContext;
+
     public List<StateTransition> transitions = new List<StateTransition>();
 
     private void Start()
     {
+        aiContext = new AIContext(transform);
         currentState = initialState;
         currentState.EnterState(this);
     }
@@ -19,12 +22,13 @@ public class StateManager : MonoBehaviour
     private void Update()
     {
         timeInCurrentState += Time.deltaTime;
+        UpdateContext();
         currentState.UpdateState(this);
         foreach(var transition in transitions)
         {
             if(transition.currentState == currentState)
             {
-                if(transition.decisionCard != null && transition.decisionCard.Decide(transform, targetObject, timeInCurrentState))
+                if(transition.decisionCard != null && transition.decisionCard.Decide(aiContext))
                 {
                     SwitchState(transition.targetState);
                     break;
@@ -39,6 +43,12 @@ public class StateManager : MonoBehaviour
         currentState = state;
         timeInCurrentState = 0f;
         currentState.EnterState(this);
+    }
+
+    public void UpdateContext()
+    {
+        aiContext.targetObject = targetObject;
+        aiContext.timeInState = timeInCurrentState;
     }
 }
 

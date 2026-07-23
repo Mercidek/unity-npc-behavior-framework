@@ -5,11 +5,11 @@ using System.Collections.Generic;
 public class AndCompositeDecisionCardSO : DecisionCardSO
 {
     [SerializeField] private List<DecisionCardSO> decisions = new List<DecisionCardSO>();
-    public override bool Decide(Transform aiTransform, GameObject targetObject, float timeInState)
+    public override bool Decide(AIContext context)
     {
         foreach(var decision in decisions)
         {
-            if(!decision.Decide(aiTransform, targetObject, timeInState)) return false;
+            if(!decision.Decide(context)) return false;
         }
         return true;
     }

@@ -6,8 +6,8 @@ public class TimeDecisionCardSO : DecisionCardSO
     [SerializeField] private float minTimeInState;
     [SerializeField] private float maxTimeInState;
 
-    public override bool Decide(Transform aiTransform, GameObject targetObject, float timeInState)
+    public override bool Decide(AIContext context)
     {
-        return timeInState >= minTimeInState && timeInState <= maxTimeInState;
+        return context.timeInState >= minTimeInState && context.timeInState <= maxTimeInState;
     }
 }
