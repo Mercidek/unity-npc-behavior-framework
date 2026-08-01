@@ -6,6 +6,7 @@ public class AIContext
     public GameObject targetObject;
     public float timeInState;
     public float nextRollTime;
+    public float viewThreshold = -2f;
 
     public AIContext(Transform baseTransform)
     {
