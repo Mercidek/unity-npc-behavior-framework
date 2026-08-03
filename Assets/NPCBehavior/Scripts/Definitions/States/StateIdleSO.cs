@@ -3,15 +3,20 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "NewIdleState_", menuName = "NPC Behavior System/State/New Idle State")]
 public class StateIdleSO : StateSO
 {
-    public override void EnterState(StateManager manager)
+    [SerializeField] private string idleAnimBool = "isIdle";
+
+    public override void EnterState(INPCBehavior behavior)
+    {
+        behavior.Stop();
+        behavior.PlayAnimation(idleAnimBool, true);
+    }
+
+    public override void UpdateState(INPCBehavior behavior)
     {
     }
 
-    public override void UpdateState(StateManager manager)
+    public override void ExitState(INPCBehavior behavior)
     {
-    }
-
-    public override void ExitState(StateManager manager)
-    {
+        behavior.PlayAnimation(idleAnimBool, false);
     }
 }
