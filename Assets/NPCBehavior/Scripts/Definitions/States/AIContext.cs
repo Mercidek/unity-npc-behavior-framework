@@ -8,6 +8,9 @@ public class AIContext
     public float nextRollTime;
     public float viewThreshold = -2f;
     public float speedChase;
+    public float speedFlee;
+    public float distanceFlee;
+    public float delayDestroy;
 
     public AIContext(Transform baseTransform)
     {

@@ -10,7 +10,12 @@ public class StateManager : MonoBehaviour, INPCBehavior
     [SerializeField] private Animator animator;
     private StateSO currentState;
     private float timeInCurrentState = 0f;
-    [SerializeField] private float chaseSpeed = 2f;
+
+    [SerializeField] private float chaseSpeed   = 2f;
+    [SerializeField] private float fleeSpeed    = 4f;
+    [SerializeField] private float turnSpeed    = 2f;
+    [SerializeField] private float fleeDistance = 10f;
+    [SerializeField] private float destroyDelay = 4f;
 
     private AIContext aiContext;
 
@@ -60,6 +65,9 @@ public class StateManager : MonoBehaviour, INPCBehavior
         aiContext.targetObject = targetObject;
         aiContext.timeInState  = timeInCurrentState;
         aiContext.speedChase   = chaseSpeed;
+        aiContext.speedFlee    = fleeSpeed;
+        aiContext.distanceFlee = fleeDistance;
+        aiContext.delayDestroy = destroyDelay;
     }
 
     // Behaviors
@@ -89,6 +97,26 @@ public class StateManager : MonoBehaviour, INPCBehavior
         animator.SetTrigger(triggerName);
     }
 
+    public void CleanupAfterDeath()
+    {
+        Destroy(gameObject, destroyDelay);
+    }
+
+    public void LookAtTarget(Transform target)
+    {
+        Vector3 targetDirection = target.position - transform.position;
+        RotateToDirection(targetDirection);
+    }
+
+    public void RotateToDirection(Vector3 direction)
+    {
+        if(direction == Vector3.zero) return;
+
+        direction.y = 0f;
+        Quaternion targetDirection = Quaternion.LookRotation(direction);
+        transform.rotation = Quaternion.Slerp(transform.rotation, targetDirection, turnSpeed * Time.deltaTime);
+    }
+
     public Transform GetTarget()
     {
         return targetObject.transform;
@@ -102,6 +130,16 @@ public class StateManager : MonoBehaviour, INPCBehavior
     public float GetCurrentChaseSpeed()
     {
         return chaseSpeed;
+    }
+
+    public float GetCurrentFleeSpeed()
+    {
+        return fleeSpeed;
+    }
+
+    public float GetFleeDistance()
+    {
+        return fleeDistance;
     }
 }
 
