@@ -3,7 +3,7 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "NewDeadState_", menuName = "NPC Behavior System/State/New Dead State")]
 public class StateDeadSO : StateSO
 {
-    [SerializeField] private string dieAnimTrigger = "isDead";
+    [SerializeField] private string dieAnimTrigger = "Die";
 
     public override void EnterState(INPCBehavior behavior)
     {

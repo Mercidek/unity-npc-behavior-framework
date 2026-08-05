@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.Collections.Generic;
 using UnityEngine.AI;
+using System;
 
 public class StateManager : MonoBehaviour, INPCBehavior
 {
@@ -14,8 +15,13 @@ public class StateManager : MonoBehaviour, INPCBehavior
     [SerializeField] private float chaseSpeed   = 2f;
     [SerializeField] private float fleeSpeed    = 4f;
     [SerializeField] private float turnSpeed    = 2f;
+    [SerializeField] private float patrolSpeed  = 1f;
     [SerializeField] private float fleeDistance = 10f;
     [SerializeField] private float destroyDelay = 4f;
+
+    public event Action OnAttackTriggered;
+
+    [SerializeField] private List<Transform> waypoints = new List<Transform>();
 
     private AIContext aiContext;
 
@@ -25,11 +31,25 @@ public class StateManager : MonoBehaviour, INPCBehavior
     {
         agent    = GetComponent<NavMeshAgent>();
         animator = GetComponent<Animator>();
+
+        OnAttackTriggered += ApplyDamageToTarget;
     }
 
     private void Start()
     {
         aiContext = new AIContext(transform);
+
+        if(waypoints != null && waypoints.Count > 0)
+        {
+            foreach(var wp in waypoints)
+            {
+                if(wp != null)
+                {
+                    aiContext.waypointList.Add(wp);
+                }
+            }
+        }
+
         SwitchState(initialState);
     }
 
@@ -51,6 +71,11 @@ public class StateManager : MonoBehaviour, INPCBehavior
         }
     }
 
+    private void OnDestroy()
+    {
+        OnAttackTriggered -= ApplyDamageToTarget;
+    }
+
     public void SwitchState(StateSO state)
     {
         if(currentState != null) currentState.ExitState(this);
@@ -66,8 +91,38 @@ public class StateManager : MonoBehaviour, INPCBehavior
         aiContext.timeInState  = timeInCurrentState;
         aiContext.speedChase   = chaseSpeed;
         aiContext.speedFlee    = fleeSpeed;
+        aiContext.speedPatrol  = patrolSpeed;
         aiContext.distanceFlee = fleeDistance;
         aiContext.delayDestroy = destroyDelay;
+    }
+
+    public Transform GetCurrentWaypointPosition()
+    {
+        if(aiContext.waypointList == null || aiContext.waypointList.Count == 0) return transform;
+
+        if(aiContext.waypointIndex >= aiContext.waypointList.Count)
+        {
+            aiContext.waypointIndex = 0;
+        }
+
+        int index = aiContext.waypointIndex;
+        return aiContext.waypointList[index];
+    }
+
+    public void GoToNextWaypoint()
+    {
+        if(aiContext.waypointList == null || aiContext.waypointList.Count == 0) return;
+
+        aiContext.waypointIndex += 1;
+
+        if(aiContext.waypointIndex >= aiContext.waypointList.Count)
+        {
+            aiContext.waypointIndex = 0;
+        }
+    }
+
+    private void ApplyDamageToTarget()
+    {
     }
 
     // Behaviors
@@ -127,6 +182,11 @@ public class StateManager : MonoBehaviour, INPCBehavior
         return transform.position;
     }
 
+    public void SendAttackSignal()
+    {
+        OnAttackTriggered?.Invoke();
+    }
+
     public float GetCurrentChaseSpeed()
     {
         return chaseSpeed;
@@ -135,6 +195,11 @@ public class StateManager : MonoBehaviour, INPCBehavior
     public float GetCurrentFleeSpeed()
     {
         return fleeSpeed;
+    }
+
+    public float GetCurrentPatrolSpeed()
+    {
+        return patrolSpeed;
     }
 
     public float GetFleeDistance()

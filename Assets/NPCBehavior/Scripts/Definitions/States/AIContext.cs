@@ -1,7 +1,10 @@
 using UnityEngine;
+using System.Collections.Generic;
 
 public class AIContext
 {
+    public List<Transform> waypointList = new List<Transform>();
+
     public Transform aiTransform { get; private set; }
     public GameObject targetObject;
     public float timeInState;
@@ -9,8 +12,10 @@ public class AIContext
     public float viewThreshold = -2f;
     public float speedChase;
     public float speedFlee;
+    public float speedPatrol;
     public float distanceFlee;
     public float delayDestroy;
+    public int waypointIndex;
 
     public AIContext(Transform baseTransform)
     {

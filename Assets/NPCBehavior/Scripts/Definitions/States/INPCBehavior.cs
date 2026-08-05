@@ -1,7 +1,10 @@
+using System;
 using UnityEngine;
 
 public interface INPCBehavior
 {
+    event Action OnAttackTriggered;
+
     void MoveToPosition(Vector3 targetPosition, float speed);
     void Stop();
     void PlayAnimation(string parameterName, bool value);
@@ -11,7 +14,11 @@ public interface INPCBehavior
     void RotateToDirection(Vector3 direction);
     Transform GetTarget();
     Vector3 GetCurrentPosition();
+    Transform GetCurrentWaypointPosition();
+    void GoToNextWaypoint();
+    void SendAttackSignal();
     float GetCurrentChaseSpeed();
     float GetCurrentFleeSpeed();
+    float GetCurrentPatrolSpeed();
     float GetFleeDistance();
 }
