@@ -76,6 +76,22 @@ public class StateManager : MonoBehaviour, INPCBehavior
         OnAttackTriggered -= ApplyDamageToTarget;
     }
 
+    // Debug Visuals
+    private void OnDrawGizmos()
+    {
+        if(aiContext == null || currentState == null || transitions == null) return;
+
+        aiContext.debugYOffset = 0f;
+
+        foreach(var transition in transitions)
+        {
+            if(transition.currentState == currentState)
+            {
+                transition.decisionCard.DrawCardGizmos(aiContext);
+            }
+        }
+    }
+
     public void SwitchState(StateSO state)
     {
         if(currentState != null) currentState.ExitState(this);

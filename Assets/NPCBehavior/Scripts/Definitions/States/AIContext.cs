@@ -17,6 +17,9 @@ public class AIContext
     public float delayDestroy;
     public int waypointIndex;
 
+    // For Debug Visuals
+    public float debugYOffset;
+
     public AIContext(Transform baseTransform)
     {
         aiTransform = baseTransform;

@@ -17,4 +17,23 @@ public class RandomChanceDecisionCardSO : DecisionCardSO
         }
         return false;
     }
+
+    public override void DrawCardGizmos(AIContext context)
+    {
+        #if UNITY_EDITOR
+        Vector3 basePos       = context.aiTransform.position;
+        float baseHeight      = 1.8f + context.debugYOffset;
+        Vector3 labelPosition = basePos + (Vector3.up * baseHeight);
+
+        float currentTimer = context.timeInState;
+        float nextRollTime = context.nextRollTime;
+
+        string infoText = $"Random Chance Check\nElapsed: {currentTimer:F1}s\nNext Roll Time: {nextRollTime:F1}s\nSuccess Rate: {(successRate * 100f):F0}%";
+        UnityEditor.Handles.Label(labelPosition, infoText);
+
+        context.debugYOffset += 2.6f;
+
+        UnityEditor.Handles.color = Color.white;
+        #endif
+    }
 }

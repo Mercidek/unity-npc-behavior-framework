@@ -13,4 +13,16 @@ public class AndCompositeDecisionCardSO : DecisionCardSO
         }
         return true;
     }
+
+    public override void DrawCardGizmos(AIContext context)
+    {
+        if(decisions == null) return;
+        foreach (var decision in decisions)
+        {
+            if(decision != null)
+            {
+                decision.DrawCardGizmos(context);
+            }
+        }
+    }
 }
