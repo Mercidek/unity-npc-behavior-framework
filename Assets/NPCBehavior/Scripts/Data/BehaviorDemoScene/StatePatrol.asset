@@ -13,3 +13,4 @@ MonoBehaviour:
   m_Name: StatePatrol
   m_EditorClassIdentifier: Assembly-CSharp::StatePatrolSO
   patrolAnimBool: isPatrolling
+  waypointTargetDistance: 0.5
